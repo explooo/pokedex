@@ -7,6 +7,7 @@ import 'package:pokedex/classifier/classifier.dart';
 
 const _labelsFileName = 'assets/labels.txt';
 const _modelFileName = 'model.tflite';
+
 class home_screen extends StatefulWidget {
   const home_screen({super.key});
 
@@ -23,7 +24,7 @@ enum status {
 class _home_screenState extends State<home_screen> {
   final ImagePicker picker = ImagePicker();
   File? _selectedImageFile;
-   status _status = status.idle;
+  status _status = status.idle;
   String _label = ''; // Name of Error Message
   double _accuracy = 0.0;
   bool _isAnalyzing = false;
@@ -47,20 +48,21 @@ class _home_screenState extends State<home_screen> {
       labelsFileName: _labelsFileName,
       modelFileName: _modelFileName,
     );
-    
+
     if (classifier != null) {
-    _classifier = classifier;
-  } else {
-    // Handle the error
-    debugPrint('Failed to load classifier');
+      _classifier = classifier;
+    } else {
+      // Handle the error
+      debugPrint('Failed to load classifier');
+    }
   }
-  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: _fabbutton(),
       body: Container(
-        color: Colors.blue,
+        color: Theme.of(context).primaryColor,
         width: double.infinity,
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -69,11 +71,12 @@ class _home_screenState extends State<home_screen> {
               padding: EdgeInsets.only(top: 50),
             ),
             Text(
-              "Pokedex",
+              "Pokédex",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 30,
+                fontSize: 34,
                 fontWeight: FontWeight.bold,
+                fontFamily: 'Pokemon',
               ),
             ),
             Padding(
@@ -127,22 +130,21 @@ class _home_screenState extends State<home_screen> {
 
     _analyzeImage(imageFile);
   }
+
   void _setAnalyzing(bool flag) {
     setState(() {
       _isAnalyzing = flag;
     });
   }
 
-void _analyzeImage(File image) {
+  void _analyzeImage(File image) {
     _setAnalyzing(true);
 
     final imageInput = img.decodeImage(image.readAsBytesSync())!;
 
     final resultCategory = _classifier.predict(imageInput);
 
-    final result = resultCategory.score >= 0.8
-        ? status.found
-        : status.notFound;
+    final result = resultCategory.score >= 0.8 ? status.found : status.notFound;
     final plantLabel = resultCategory.label;
     final accuracy = resultCategory.score;
 
@@ -174,16 +176,25 @@ void _analyzeImage(File image) {
 
     return Column(
       children: [
-        Text(title,),
+        Text("This is : $title",
+            style: TextStyle(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+            )),
         const SizedBox(height: 10),
-        Text(accuracyLabel,)
+        Text(
+          "with an accuracy of: $accuracyLabel",
+          style: TextStyle(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            fontSize: 18,
+            // fontWeight: FontWeight.bold,
+          ),
+        )
       ],
     );
   }
-
 }
-
-
 
 class PlantPhotoView extends StatelessWidget {
   final File? file;
@@ -193,7 +204,7 @@ class PlantPhotoView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 67, 201, 87),
+        color: Theme.of(context).secondaryHeaderColor,
         borderRadius: BorderRadius.circular(10),
       ),
       width: 300,
@@ -202,13 +213,10 @@ class PlantPhotoView extends StatelessWidget {
           ? const Center(
               child: Text(
               'No Image Selected',
-             
             ))
-          : Image.file(file!, fit: BoxFit.cover),
+          : ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.file(file!, fit: BoxFit.cover)),
     );
   }
-
 }
-
-
-

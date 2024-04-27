@@ -28,3 +28,8 @@ flutter:
 
   assets:
     - assets/
+  fonts:
+    - family: Pokemon
+      fonts:
+        - asset: fonts/Pokemon.ttf
+        

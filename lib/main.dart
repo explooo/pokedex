@@ -9,10 +9,15 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    
+    return  MaterialApp(
       title: "Pokedex",
       home: home_screen(),
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Color.fromRGBO(238,21,21,1)
+      ),
     );
   }
 }
