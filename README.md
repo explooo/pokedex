@@ -1,6 +1,6 @@
 # Pokedex
 
-This is a Flutter application that identifies Pokemons from images.
+This is a Flutter application that identifies Pokemons from images using image classification.
 
 ## Features
 
